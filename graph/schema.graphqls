@@ -1,0 +1,46 @@
+type ContenidoAudioVisual {
+  id: ID!
+  nombre: String!
+  descripcion: String
+  generos: [ID!]!
+  tipoId: ID!
+  imageUrl: String
+}
+
+type Genero {
+  id: ID!
+  nombre: String!
+}
+
+type TipoContenidoAudioVisual {
+  id: ID!
+  singular: String!
+  plural: String!
+}
+
+type ContenidoAudioVisualMapped {
+  id: ID!
+  nombre: String!
+  descripcion: String
+  generos: [Genero!]!
+  tipo: TipoContenidoAudioVisual!
+  imageUrl: String
+}
+
+type Query {
+  ContenidoAudioVisual: [ContenidoAudioVisual!]!
+  ContenidoAudioVisualMapped: [ContenidoAudioVisualMapped!]!
+  contenido(id: ID!): ContenidoAudioVisualMapped
+}
+
+input NuevoContenidoAudioVisual {
+  nombre: String!
+  descripcion: String!
+  generos: [ID!]!
+  tipoId: ID!
+  imageUrl: String
+}
+
+type Mutation {
+  createContenidoAudiovisual(input: NuevoContenidoAudioVisual!): ContenidoAudioVisual!
+}
