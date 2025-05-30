@@ -10,11 +10,12 @@ import (
 
 	"github.com/NeichS/graphql-pixdex/data"
 	"github.com/NeichS/graphql-pixdex/graph/model"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 // CreateContenidoAudiovisual is the resolver for the createContenidoAudiovisual field.
 func (r *mutationResolver) CreateContenidoAudiovisual(ctx context.Context, input model.NuevoContenidoAudioVisual) (*model.ContenidoAudioVisual, error) {
-	
+
 	if input.Nombre == "" {
 		return nil, fmt.Errorf("el nombre del contenido audiovisual es obligatorio")
 	}
@@ -59,7 +60,10 @@ func (r *queryResolver) Contenido(ctx context.Context, id string) (*model.Conten
 
 	contenidoMapped, err := data.GetContenidoPorID(id)
 	if err != nil {
-		return nil, nil
+		return nil, &gqlerror.Error{
+			Message:    fmt.Sprintf("Contenido con ID %s no existe", id),
+			Extensions: map[string]interface{}{"code": "NOT_FOUND"},
+		}
 	}
 	return mapContenidoVisual(contenidoMapped), nil
 }
