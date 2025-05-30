@@ -14,7 +14,29 @@ import (
 
 // CreateContenidoAudiovisual is the resolver for the createContenidoAudiovisual field.
 func (r *mutationResolver) CreateContenidoAudiovisual(ctx context.Context, input model.NuevoContenidoAudioVisual) (*model.ContenidoAudioVisual, error) {
-	panic(fmt.Errorf("not implemented: CreateContenidoAudiovisual - createContenidoAudiovisual"))
+	
+	if input.Nombre == "" {
+		return nil, fmt.Errorf("el nombre del contenido audiovisual es obligatorio")
+	}
+	if input.Descripcion == "" {
+		return nil, fmt.Errorf("la descripcion del contenido audiovisual es obligatoria")
+	}
+	if len(input.Generos) == 0 {
+		return nil, fmt.Errorf("debe seleccionar al menos un genero")
+	}
+	if input.TipoID == "" {
+		return nil, fmt.Errorf("el tipo de contenido audiovisual es obligatorio")
+	}
+
+	contenido := &model.ContenidoAudioVisual{
+		ID:          "99",
+		Nombre:      input.Nombre,
+		Descripcion: &input.Descripcion,
+		ImageURL:    input.ImageURL,
+		TipoID:      input.TipoID,
+		Generos:     input.Generos,
+	}
+	return contenido, nil
 }
 
 // ContenidoAudioVisual is the resolver for the ContenidoAudioVisual field.
