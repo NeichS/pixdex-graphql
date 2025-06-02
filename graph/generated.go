@@ -71,7 +71,9 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateContenidoAudiovisual func(childComplexity int, input model.NuevoContenidoAudioVisual) int
+		CreateContenidoAudiovisual     func(childComplexity int, input model.NuevoContenidoAudioVisual) int
+		CreateGenero                   func(childComplexity int, input model.NuevoGenero) int
+		CreateTipoContenidoAudioVisual func(childComplexity int, input model.NuevoTipoContenidoAudioVisual) int
 	}
 
 	Query struct {
@@ -89,6 +91,8 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateContenidoAudiovisual(ctx context.Context, input model.NuevoContenidoAudioVisual) (*model.ContenidoAudioVisual, error)
+	CreateGenero(ctx context.Context, input model.NuevoGenero) (*model.Genero, error)
+	CreateTipoContenidoAudioVisual(ctx context.Context, input model.NuevoTipoContenidoAudioVisual) (*model.TipoContenidoAudioVisual, error)
 }
 type QueryResolver interface {
 	ContenidoAudioVisual(ctx context.Context) ([]*model.ContenidoAudioVisual, error)
@@ -225,6 +229,30 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Mutation.CreateContenidoAudiovisual(childComplexity, args["input"].(model.NuevoContenidoAudioVisual)), true
 
+	case "Mutation.createGenero":
+		if e.complexity.Mutation.CreateGenero == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createGenero_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateGenero(childComplexity, args["input"].(model.NuevoGenero)), true
+
+	case "Mutation.createTipoContenidoAudioVisual":
+		if e.complexity.Mutation.CreateTipoContenidoAudioVisual == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createTipoContenidoAudioVisual_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateTipoContenidoAudioVisual(childComplexity, args["input"].(model.NuevoTipoContenidoAudioVisual)), true
+
 	case "Query.contenido":
 		if e.complexity.Query.Contenido == nil {
 			break
@@ -281,6 +309,8 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := executionContext{opCtx, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputNuevoContenidoAudioVisual,
+		ec.unmarshalInputNuevoGenero,
+		ec.unmarshalInputNuevoTipoContenidoAudioVisual,
 	)
 	first := true
 
@@ -417,6 +447,52 @@ func (ec *executionContext) field_Mutation_createContenidoAudiovisual_argsInput(
 	}
 
 	var zeroVal model.NuevoContenidoAudioVisual
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_createGenero_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_createGenero_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_createGenero_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (model.NuevoGenero, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNNuevoGenero2githubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐNuevoGenero(ctx, tmp)
+	}
+
+	var zeroVal model.NuevoGenero
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_createTipoContenidoAudioVisual_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_createTipoContenidoAudioVisual_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_createTipoContenidoAudioVisual_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (model.NuevoTipoContenidoAudioVisual, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNNuevoTipoContenidoAudioVisual2githubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐNuevoTipoContenidoAudioVisual(ctx, tmp)
+	}
+
+	var zeroVal model.NuevoTipoContenidoAudioVisual
 	return zeroVal, nil
 }
 
@@ -1247,6 +1323,130 @@ func (ec *executionContext) fieldContext_Mutation_createContenidoAudiovisual(ctx
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createContenidoAudiovisual_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createGenero(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createGenero(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateGenero(rctx, fc.Args["input"].(model.NuevoGenero))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Genero)
+	fc.Result = res
+	return ec.marshalNGenero2ᚖgithubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐGenero(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createGenero(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Genero_id(ctx, field)
+			case "nombre":
+				return ec.fieldContext_Genero_nombre(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Genero", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createGenero_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createTipoContenidoAudioVisual(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createTipoContenidoAudioVisual(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateTipoContenidoAudioVisual(rctx, fc.Args["input"].(model.NuevoTipoContenidoAudioVisual))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.TipoContenidoAudioVisual)
+	fc.Result = res
+	return ec.marshalNTipoContenidoAudioVisual2ᚖgithubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐTipoContenidoAudioVisual(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createTipoContenidoAudioVisual(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_TipoContenidoAudioVisual_id(ctx, field)
+			case "singular":
+				return ec.fieldContext_TipoContenidoAudioVisual_singular(ctx, field)
+			case "plural":
+				return ec.fieldContext_TipoContenidoAudioVisual_plural(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TipoContenidoAudioVisual", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createTipoContenidoAudioVisual_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -3704,6 +3904,67 @@ func (ec *executionContext) unmarshalInputNuevoContenidoAudioVisual(ctx context.
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputNuevoGenero(ctx context.Context, obj any) (model.NuevoGenero, error) {
+	var it model.NuevoGenero
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"nombre"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "nombre":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nombre"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Nombre = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputNuevoTipoContenidoAudioVisual(ctx context.Context, obj any) (model.NuevoTipoContenidoAudioVisual, error) {
+	var it model.NuevoTipoContenidoAudioVisual
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"singular", "plural"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "singular":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("singular"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Singular = data
+		case "plural":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plural"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Plural = data
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -3894,6 +4155,20 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createContenidoAudiovisual":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createContenidoAudiovisual(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createGenero":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createGenero(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createTipoContenidoAudioVisual":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createTipoContenidoAudioVisual(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -4546,6 +4821,10 @@ func (ec *executionContext) marshalNContenidoAudioVisualMapped2ᚖgithubᚗcom�
 	return ec._ContenidoAudioVisualMapped(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNGenero2githubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐGenero(ctx context.Context, sel ast.SelectionSet, v model.Genero) graphql.Marshaler {
+	return ec._Genero(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNGenero2ᚕᚖgithubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐGeneroᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Genero) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -4651,6 +4930,16 @@ func (ec *executionContext) unmarshalNNuevoContenidoAudioVisual2githubᚗcomᚋN
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNNuevoGenero2githubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐNuevoGenero(ctx context.Context, v any) (model.NuevoGenero, error) {
+	res, err := ec.unmarshalInputNuevoGenero(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNNuevoTipoContenidoAudioVisual2githubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐNuevoTipoContenidoAudioVisual(ctx context.Context, v any) (model.NuevoTipoContenidoAudioVisual, error) {
+	res, err := ec.unmarshalInputNuevoTipoContenidoAudioVisual(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v any) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4665,6 +4954,10 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNTipoContenidoAudioVisual2githubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐTipoContenidoAudioVisual(ctx context.Context, sel ast.SelectionSet, v model.TipoContenidoAudioVisual) graphql.Marshaler {
+	return ec._TipoContenidoAudioVisual(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNTipoContenidoAudioVisual2ᚖgithubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐTipoContenidoAudioVisual(ctx context.Context, sel ast.SelectionSet, v *model.TipoContenidoAudioVisual) graphql.Marshaler {

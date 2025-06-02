@@ -41,6 +41,16 @@ input NuevoContenidoAudioVisual {
   imageUrl: String
 }
 
+input NuevoGenero {
+  nombre: String!
+}
+input NuevoTipoContenidoAudioVisual {
+  singular: String!
+  plural: String!
+}
+
 type Mutation {
   createContenidoAudiovisual(input: NuevoContenidoAudioVisual!): ContenidoAudioVisual!
+  createGenero(input: NuevoGenero!): Genero!
+  createTipoContenidoAudioVisual(input: NuevoTipoContenidoAudioVisual!): TipoContenidoAudioVisual!
 }

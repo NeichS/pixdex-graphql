@@ -271,3 +271,24 @@ func GetContenidoPorID(id string) (*model.ContenidoAudioVisual,error) {
 	}
 	return nil, errors.New("contenido not found")
 }
+
+func MapContenidoAudioVisual(contenido *model.ContenidoAudioVisual) *model.ContenidoAudioVisualMapped {
+	// Mapear generos
+	var generosMapped []*model.Genero
+	for _, generoID := range contenido.Generos {
+		genero := GetGeneroPorId(generoID)
+		generosMapped = append(generosMapped, genero)
+	}
+
+	// Mapear tipo
+	tipo := GetTipoPorId(contenido.TipoID)
+
+	return &model.ContenidoAudioVisualMapped{
+		ID:          contenido.ID,
+		Nombre:      contenido.Nombre,
+		Descripcion: contenido.Descripcion,
+		Generos:     generosMapped,
+		Tipo:        &tipo,
+		ImageURL:    contenido.ImageURL,
+	}
+}

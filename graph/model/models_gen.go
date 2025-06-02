@@ -36,6 +36,15 @@ type NuevoContenidoAudioVisual struct {
 	ImageURL    *string  `json:"imageUrl,omitempty"`
 }
 
+type NuevoGenero struct {
+	Nombre string `json:"nombre"`
+}
+
+type NuevoTipoContenidoAudioVisual struct {
+	Singular string `json:"singular"`
+	Plural   string `json:"plural"`
+}
+
 type Query struct {
 }
 

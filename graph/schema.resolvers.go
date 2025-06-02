@@ -15,7 +15,6 @@ import (
 
 // CreateContenidoAudiovisual is the resolver for the createContenidoAudiovisual field.
 func (r *mutationResolver) CreateContenidoAudiovisual(ctx context.Context, input model.NuevoContenidoAudioVisual) (*model.ContenidoAudioVisual, error) {
-
 	if input.Nombre == "" {
 		return nil, fmt.Errorf("el nombre del contenido audiovisual es obligatorio")
 	}
@@ -40,6 +39,34 @@ func (r *mutationResolver) CreateContenidoAudiovisual(ctx context.Context, input
 	return contenido, nil
 }
 
+// CreateGenero is the resolver for the createGenero field.
+func (r *mutationResolver) CreateGenero(ctx context.Context, input model.NuevoGenero) (*model.Genero, error) {
+	if input.Nombre == "" {
+		return nil, fmt.Errorf("el nombre del genero es obligatorio")
+	}
+
+	genero := &model.Genero{
+		ID:     "99",
+		Nombre: input.Nombre,
+	}
+	return genero, nil
+}
+
+// CreateTipoContenidoAudioVisual is the resolver for the createTipoContenidoAudioVisual field.
+func (r *mutationResolver) CreateTipoContenidoAudioVisual(ctx context.Context, input model.NuevoTipoContenidoAudioVisual) (*model.TipoContenidoAudioVisual, error) {
+	if input.Plural == "" || input.Singular == "" {
+		return nil, &gqlerror.Error{
+			Message: fmt.Sprintf("Invalid plural"),
+			Extensions: map[string]interface{}{"code": "INVALID_INPUT"},
+		}
+	}
+	return &model.TipoContenidoAudioVisual{
+		ID:       "99",
+		Singular: input.Singular,
+		Plural : input.Plural,
+	}, nil
+}
+
 // ContenidoAudioVisual is the resolver for the ContenidoAudioVisual field.
 func (r *queryResolver) ContenidoAudioVisual(ctx context.Context) ([]*model.ContenidoAudioVisual, error) {
 	var contenidoMapped []*model.ContenidoAudioVisual
@@ -50,14 +77,13 @@ func (r *queryResolver) ContenidoAudioVisual(ctx context.Context) ([]*model.Cont
 func (r *queryResolver) ContenidoAudioVisualMapped(ctx context.Context) ([]*model.ContenidoAudioVisualMapped, error) {
 	var contenidoMapped []*model.ContenidoAudioVisualMapped
 	for _, contenido := range data.ContenidosAudiovisuales {
-		contenidoMapped = append(contenidoMapped, mapContenidoVisual(contenido))
+		contenidoMapped = append(contenidoMapped, data.MapContenidoAudioVisual(contenido))
 	}
 	return contenidoMapped, nil
 }
 
 // Contenido is the resolver for the contenido field.
 func (r *queryResolver) Contenido(ctx context.Context, id string) (*model.ContenidoAudioVisualMapped, error) {
-
 	contenidoMapped, err := data.GetContenidoPorID(id)
 	if err != nil {
 		return nil, &gqlerror.Error{
@@ -65,7 +91,7 @@ func (r *queryResolver) Contenido(ctx context.Context, id string) (*model.Conten
 			Extensions: map[string]interface{}{"code": "NOT_FOUND"},
 		}
 	}
-	return mapContenidoVisual(contenidoMapped), nil
+	return data.MapContenidoAudioVisual(contenidoMapped), nil
 }
 
 // Mutation returns MutationResolver implementation.
@@ -76,22 +102,3 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
-func mapContenidoVisual(content *model.ContenidoAudioVisual) *model.ContenidoAudioVisualMapped {
-	generos := make([]*model.Genero, 0, len(content.Generos))
-	for _, generoID := range content.Generos {
-		genero := data.GetGeneroPorId(generoID)
-		if genero != nil {
-			generos = append(generos, genero)
-		}
-	}
-	tipo := data.GetTipoPorId(content.TipoID)
-	return &model.ContenidoAudioVisualMapped{
-		ID:          content.ID,
-		Nombre:      content.Nombre,
-		Descripcion: content.Descripcion,
-		Generos:     generos,
-		Tipo:        &tipo,
-		ImageURL:    content.ImageURL,
-	}
-}
