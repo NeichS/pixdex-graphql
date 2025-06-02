@@ -56,14 +56,119 @@ func (r *mutationResolver) CreateGenero(ctx context.Context, input model.NuevoGe
 func (r *mutationResolver) CreateTipoContenidoAudioVisual(ctx context.Context, input model.NuevoTipoContenidoAudioVisual) (*model.TipoContenidoAudioVisual, error) {
 	if input.Plural == "" || input.Singular == "" {
 		return nil, &gqlerror.Error{
-			Message: fmt.Sprintf("Invalid plural"),
+			Message:    fmt.Sprintf("Invalid plural"),
 			Extensions: map[string]interface{}{"code": "INVALID_INPUT"},
 		}
 	}
 	return &model.TipoContenidoAudioVisual{
 		ID:       "99",
 		Singular: input.Singular,
-		Plural : input.Plural,
+		Plural:   input.Plural,
+	}, nil
+}
+
+// UpdateContenidoNombre is the resolver for the updateContenidoNombre field.
+func (r *mutationResolver) UpdateContenidoNombre(ctx context.Context, id string, newNombre string) (*model.ContenidoAudioVisual, error) {
+	contenido, err := data.GetContenidoPorID(id)
+
+	if err != nil {
+		return nil, &gqlerror.Error{
+			Message:    fmt.Sprintf("Contenido con ID %s no existe", id),
+			Extensions: map[string]interface{}{"code": "NOT_FOUND"},
+		}
+	}
+
+	return &model.ContenidoAudioVisual{
+		ID:          contenido.ID,
+		Nombre:      newNombre,
+		Descripcion: contenido.Descripcion,
+		Generos:     contenido.Generos,
+		TipoID:      contenido.TipoID,
+		ImageURL:    contenido.ImageURL,
+	}, nil
+}
+
+// UpdateContenidoDescripcion is the resolver for the updateContenidoDescripcion field.
+func (r *mutationResolver) UpdateContenidoDescripcion(ctx context.Context, id string, newDescripcion string) (*model.ContenidoAudioVisual, error) {
+	contenido, err := data.GetContenidoPorID(id)
+
+	if err != nil {
+		return nil, &gqlerror.Error{
+			Message:    fmt.Sprintf("Contenido con ID %s no existe", id),
+			Extensions: map[string]interface{}{"code": "NOT_FOUND"},
+		}
+	}
+
+	return &model.ContenidoAudioVisual{
+		ID:          contenido.ID,
+		Nombre:      contenido.Nombre,
+		Descripcion: &newDescripcion,
+		Generos:     contenido.Generos,
+		TipoID:      contenido.TipoID,
+		ImageURL:    contenido.ImageURL,
+	}, nil
+}
+
+// UpdateContenidoTipo is the resolver for the updateContenidoTipo field.
+func (r *mutationResolver) UpdateContenidoTipo(ctx context.Context, id string, newTipoID string) (*model.ContenidoAudioVisual, error) {
+	contenido, err := data.GetContenidoPorID(id)
+
+	if err != nil {
+		return nil, &gqlerror.Error{
+			Message:    fmt.Sprintf("Contenido con ID %s no existe", id),
+			Extensions: map[string]interface{}{"code": "NOT_FOUND"},
+		}
+	}
+
+	return &model.ContenidoAudioVisual{
+		ID:          contenido.ID,
+		Nombre:      contenido.Nombre,
+		Descripcion: contenido.Descripcion,
+		Generos:     contenido.Generos,
+		TipoID:      newTipoID,
+		ImageURL:    contenido.ImageURL,
+	}, nil
+}
+
+// UpdateContenidoGeneros is the resolver for the updateContenidoGeneros field.
+func (r *mutationResolver) UpdateContenidoGeneros(ctx context.Context, id string, newGeneros []string) (*model.ContenidoAudioVisual, error) {
+	contenido, err := data.GetContenidoPorID(id)
+
+	if err != nil {
+		return nil, &gqlerror.Error{
+			Message:    fmt.Sprintf("Contenido con ID %s no existe", id),
+			Extensions: map[string]interface{}{"code": "NOT_FOUND"},
+		}
+	}
+
+	return &model.ContenidoAudioVisual{
+		ID:          contenido.ID,
+		Nombre:      contenido.Nombre,
+		Descripcion: contenido.Descripcion,
+		Generos:     newGeneros,
+		TipoID:      contenido.TipoID,
+		ImageURL:    contenido.ImageURL,
+	}, nil
+}
+
+// UpdateContenidoImageURL is the resolver for the updateContenidoImageUrl field.
+func (r *mutationResolver) UpdateContenidoImageURL(ctx context.Context, id string, newImageURL string) (*model.ContenidoAudioVisual, error) {
+	contenido, err := data.GetContenidoPorID(id)
+
+	if err != nil {
+		return nil, &gqlerror.Error{
+			Message:    fmt.Sprintf("Contenido con ID %s no existe", id),
+			Extensions: map[string]interface{}{"code": "NOT_FOUND"},
+		}
+	}
+
+	return &model.ContenidoAudioVisual{
+		ID:          contenido.ID,
+		Nombre:      contenido.Nombre,
+		Descripcion: contenido.Descripcion,
+		Generos:     contenido.Generos,
+		TipoID:      contenido.TipoID,
+		ImageURL:    &newImageURL,
 	}, nil
 }
 

@@ -53,4 +53,10 @@ type Mutation {
   createContenidoAudiovisual(input: NuevoContenidoAudioVisual!): ContenidoAudioVisual!
   createGenero(input: NuevoGenero!): Genero!
   createTipoContenidoAudioVisual(input: NuevoTipoContenidoAudioVisual!): TipoContenidoAudioVisual!
+
+  updateContenidoNombre(id: ID!, newNombre: String!): ContenidoAudioVisual!
+  updateContenidoDescripcion(id: ID!, newDescripcion: String!): ContenidoAudioVisual!
+  updateContenidoTipo(id: ID!, newTipoId: ID!): ContenidoAudioVisual!
+  updateContenidoGeneros(id: ID!, newGeneros: [ID!]!): ContenidoAudioVisual!
+  updateContenidoImageUrl(id: ID!, newImageUrl: String!): ContenidoAudioVisual! 
 }

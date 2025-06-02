@@ -74,6 +74,11 @@ type ComplexityRoot struct {
 		CreateContenidoAudiovisual     func(childComplexity int, input model.NuevoContenidoAudioVisual) int
 		CreateGenero                   func(childComplexity int, input model.NuevoGenero) int
 		CreateTipoContenidoAudioVisual func(childComplexity int, input model.NuevoTipoContenidoAudioVisual) int
+		UpdateContenidoDescripcion     func(childComplexity int, id string, newDescripcion string) int
+		UpdateContenidoGeneros         func(childComplexity int, id string, newGeneros []string) int
+		UpdateContenidoImageURL        func(childComplexity int, id string, newImageURL string) int
+		UpdateContenidoNombre          func(childComplexity int, id string, newNombre string) int
+		UpdateContenidoTipo            func(childComplexity int, id string, newTipoID string) int
 	}
 
 	Query struct {
@@ -93,6 +98,11 @@ type MutationResolver interface {
 	CreateContenidoAudiovisual(ctx context.Context, input model.NuevoContenidoAudioVisual) (*model.ContenidoAudioVisual, error)
 	CreateGenero(ctx context.Context, input model.NuevoGenero) (*model.Genero, error)
 	CreateTipoContenidoAudioVisual(ctx context.Context, input model.NuevoTipoContenidoAudioVisual) (*model.TipoContenidoAudioVisual, error)
+	UpdateContenidoNombre(ctx context.Context, id string, newNombre string) (*model.ContenidoAudioVisual, error)
+	UpdateContenidoDescripcion(ctx context.Context, id string, newDescripcion string) (*model.ContenidoAudioVisual, error)
+	UpdateContenidoTipo(ctx context.Context, id string, newTipoID string) (*model.ContenidoAudioVisual, error)
+	UpdateContenidoGeneros(ctx context.Context, id string, newGeneros []string) (*model.ContenidoAudioVisual, error)
+	UpdateContenidoImageURL(ctx context.Context, id string, newImageURL string) (*model.ContenidoAudioVisual, error)
 }
 type QueryResolver interface {
 	ContenidoAudioVisual(ctx context.Context) ([]*model.ContenidoAudioVisual, error)
@@ -252,6 +262,66 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.CreateTipoContenidoAudioVisual(childComplexity, args["input"].(model.NuevoTipoContenidoAudioVisual)), true
+
+	case "Mutation.updateContenidoDescripcion":
+		if e.complexity.Mutation.UpdateContenidoDescripcion == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateContenidoDescripcion_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateContenidoDescripcion(childComplexity, args["id"].(string), args["newDescripcion"].(string)), true
+
+	case "Mutation.updateContenidoGeneros":
+		if e.complexity.Mutation.UpdateContenidoGeneros == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateContenidoGeneros_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateContenidoGeneros(childComplexity, args["id"].(string), args["newGeneros"].([]string)), true
+
+	case "Mutation.updateContenidoImageUrl":
+		if e.complexity.Mutation.UpdateContenidoImageURL == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateContenidoImageUrl_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateContenidoImageURL(childComplexity, args["id"].(string), args["newImageUrl"].(string)), true
+
+	case "Mutation.updateContenidoNombre":
+		if e.complexity.Mutation.UpdateContenidoNombre == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateContenidoNombre_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateContenidoNombre(childComplexity, args["id"].(string), args["newNombre"].(string)), true
+
+	case "Mutation.updateContenidoTipo":
+		if e.complexity.Mutation.UpdateContenidoTipo == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateContenidoTipo_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateContenidoTipo(childComplexity, args["id"].(string), args["newTipoId"].(string)), true
 
 	case "Query.contenido":
 		if e.complexity.Query.Contenido == nil {
@@ -493,6 +563,211 @@ func (ec *executionContext) field_Mutation_createTipoContenidoAudioVisual_argsIn
 	}
 
 	var zeroVal model.NuevoTipoContenidoAudioVisual
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateContenidoDescripcion_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_updateContenidoDescripcion_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	arg1, err := ec.field_Mutation_updateContenidoDescripcion_argsNewDescripcion(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["newDescripcion"] = arg1
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_updateContenidoDescripcion_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateContenidoDescripcion_argsNewDescripcion(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("newDescripcion"))
+	if tmp, ok := rawArgs["newDescripcion"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateContenidoGeneros_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_updateContenidoGeneros_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	arg1, err := ec.field_Mutation_updateContenidoGeneros_argsNewGeneros(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["newGeneros"] = arg1
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_updateContenidoGeneros_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateContenidoGeneros_argsNewGeneros(
+	ctx context.Context,
+	rawArgs map[string]any,
+) ([]string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("newGeneros"))
+	if tmp, ok := rawArgs["newGeneros"]; ok {
+		return ec.unmarshalNID2ᚕstringᚄ(ctx, tmp)
+	}
+
+	var zeroVal []string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateContenidoImageUrl_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_updateContenidoImageUrl_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	arg1, err := ec.field_Mutation_updateContenidoImageUrl_argsNewImageURL(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["newImageUrl"] = arg1
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_updateContenidoImageUrl_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateContenidoImageUrl_argsNewImageURL(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("newImageUrl"))
+	if tmp, ok := rawArgs["newImageUrl"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateContenidoNombre_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_updateContenidoNombre_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	arg1, err := ec.field_Mutation_updateContenidoNombre_argsNewNombre(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["newNombre"] = arg1
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_updateContenidoNombre_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateContenidoNombre_argsNewNombre(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("newNombre"))
+	if tmp, ok := rawArgs["newNombre"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateContenidoTipo_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_updateContenidoTipo_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	arg1, err := ec.field_Mutation_updateContenidoTipo_argsNewTipoID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["newTipoId"] = arg1
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_updateContenidoTipo_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateContenidoTipo_argsNewTipoID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("newTipoId"))
+	if tmp, ok := rawArgs["newTipoId"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
 	return zeroVal, nil
 }
 
@@ -1447,6 +1722,351 @@ func (ec *executionContext) fieldContext_Mutation_createTipoContenidoAudioVisual
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createTipoContenidoAudioVisual_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateContenidoNombre(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateContenidoNombre(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateContenidoNombre(rctx, fc.Args["id"].(string), fc.Args["newNombre"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ContenidoAudioVisual)
+	fc.Result = res
+	return ec.marshalNContenidoAudioVisual2ᚖgithubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐContenidoAudioVisual(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateContenidoNombre(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ContenidoAudioVisual_id(ctx, field)
+			case "nombre":
+				return ec.fieldContext_ContenidoAudioVisual_nombre(ctx, field)
+			case "descripcion":
+				return ec.fieldContext_ContenidoAudioVisual_descripcion(ctx, field)
+			case "generos":
+				return ec.fieldContext_ContenidoAudioVisual_generos(ctx, field)
+			case "tipoId":
+				return ec.fieldContext_ContenidoAudioVisual_tipoId(ctx, field)
+			case "imageUrl":
+				return ec.fieldContext_ContenidoAudioVisual_imageUrl(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ContenidoAudioVisual", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateContenidoNombre_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateContenidoDescripcion(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateContenidoDescripcion(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateContenidoDescripcion(rctx, fc.Args["id"].(string), fc.Args["newDescripcion"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ContenidoAudioVisual)
+	fc.Result = res
+	return ec.marshalNContenidoAudioVisual2ᚖgithubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐContenidoAudioVisual(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateContenidoDescripcion(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ContenidoAudioVisual_id(ctx, field)
+			case "nombre":
+				return ec.fieldContext_ContenidoAudioVisual_nombre(ctx, field)
+			case "descripcion":
+				return ec.fieldContext_ContenidoAudioVisual_descripcion(ctx, field)
+			case "generos":
+				return ec.fieldContext_ContenidoAudioVisual_generos(ctx, field)
+			case "tipoId":
+				return ec.fieldContext_ContenidoAudioVisual_tipoId(ctx, field)
+			case "imageUrl":
+				return ec.fieldContext_ContenidoAudioVisual_imageUrl(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ContenidoAudioVisual", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateContenidoDescripcion_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateContenidoTipo(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateContenidoTipo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateContenidoTipo(rctx, fc.Args["id"].(string), fc.Args["newTipoId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ContenidoAudioVisual)
+	fc.Result = res
+	return ec.marshalNContenidoAudioVisual2ᚖgithubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐContenidoAudioVisual(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateContenidoTipo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ContenidoAudioVisual_id(ctx, field)
+			case "nombre":
+				return ec.fieldContext_ContenidoAudioVisual_nombre(ctx, field)
+			case "descripcion":
+				return ec.fieldContext_ContenidoAudioVisual_descripcion(ctx, field)
+			case "generos":
+				return ec.fieldContext_ContenidoAudioVisual_generos(ctx, field)
+			case "tipoId":
+				return ec.fieldContext_ContenidoAudioVisual_tipoId(ctx, field)
+			case "imageUrl":
+				return ec.fieldContext_ContenidoAudioVisual_imageUrl(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ContenidoAudioVisual", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateContenidoTipo_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateContenidoGeneros(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateContenidoGeneros(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateContenidoGeneros(rctx, fc.Args["id"].(string), fc.Args["newGeneros"].([]string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ContenidoAudioVisual)
+	fc.Result = res
+	return ec.marshalNContenidoAudioVisual2ᚖgithubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐContenidoAudioVisual(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateContenidoGeneros(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ContenidoAudioVisual_id(ctx, field)
+			case "nombre":
+				return ec.fieldContext_ContenidoAudioVisual_nombre(ctx, field)
+			case "descripcion":
+				return ec.fieldContext_ContenidoAudioVisual_descripcion(ctx, field)
+			case "generos":
+				return ec.fieldContext_ContenidoAudioVisual_generos(ctx, field)
+			case "tipoId":
+				return ec.fieldContext_ContenidoAudioVisual_tipoId(ctx, field)
+			case "imageUrl":
+				return ec.fieldContext_ContenidoAudioVisual_imageUrl(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ContenidoAudioVisual", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateContenidoGeneros_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateContenidoImageUrl(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateContenidoImageUrl(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateContenidoImageURL(rctx, fc.Args["id"].(string), fc.Args["newImageUrl"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ContenidoAudioVisual)
+	fc.Result = res
+	return ec.marshalNContenidoAudioVisual2ᚖgithubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐContenidoAudioVisual(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateContenidoImageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ContenidoAudioVisual_id(ctx, field)
+			case "nombre":
+				return ec.fieldContext_ContenidoAudioVisual_nombre(ctx, field)
+			case "descripcion":
+				return ec.fieldContext_ContenidoAudioVisual_descripcion(ctx, field)
+			case "generos":
+				return ec.fieldContext_ContenidoAudioVisual_generos(ctx, field)
+			case "tipoId":
+				return ec.fieldContext_ContenidoAudioVisual_tipoId(ctx, field)
+			case "imageUrl":
+				return ec.fieldContext_ContenidoAudioVisual_imageUrl(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ContenidoAudioVisual", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateContenidoImageUrl_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -4169,6 +4789,41 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createTipoContenidoAudioVisual":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createTipoContenidoAudioVisual(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updateContenidoNombre":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateContenidoNombre(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updateContenidoDescripcion":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateContenidoDescripcion(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updateContenidoTipo":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateContenidoTipo(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updateContenidoGeneros":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateContenidoGeneros(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updateContenidoImageUrl":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateContenidoImageUrl(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
