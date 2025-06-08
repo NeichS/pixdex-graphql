@@ -179,10 +179,21 @@ func (r *queryResolver) ContenidoAudioVisual(ctx context.Context) ([]*model.Cont
 }
 
 // ContenidoAudioVisualMapped is the resolver for the ContenidoAudioVisualMapped field.
-func (r *queryResolver) ContenidoAudioVisualMapped(ctx context.Context) ([]*model.ContenidoAudioVisualMapped, error) {
+func (r *queryResolver) ContenidoAudioVisualMapped(ctx context.Context, page int32) ([]*model.ContenidoAudioVisualMapped, error) {
+	idLimit :=  make(map[int32][]int, 0)
+	idLimit[1] = []int{0 , 20}
+	idLimit[2] = []int{20 , 40}
+	idLimit[3] = []int{40 , 60}
+	
+	if page < 1 || page > 3 {
+		return nil, &gqlerror.Error{
+			Message:    fmt.Sprintf("Page %d is out of range. Valid pages are 1 to 3.", page),
+		}
+	}
+
 	var contenidoMapped []*model.ContenidoAudioVisualMapped
-	for _, contenido := range data.ContenidosAudiovisuales {
-		contenidoMapped = append(contenidoMapped, data.MapContenidoAudioVisual(contenido))
+	for i := idLimit[page][0]; i < idLimit[page][1]; i++ {
+		contenidoMapped = append(contenidoMapped, data.MapContenidoAudioVisual(data.ContenidosAudiovisuales[i]))
 	}
 	return contenidoMapped, nil
 }

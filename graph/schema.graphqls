@@ -29,7 +29,7 @@ type ContenidoAudioVisualMapped {
 
 type Query {
   ContenidoAudioVisual: [ContenidoAudioVisual!]!
-  ContenidoAudioVisualMapped: [ContenidoAudioVisualMapped!]!
+  ContenidoAudioVisualMapped(page: Int!): [ContenidoAudioVisualMapped!]!
   contenido(id: ID!): ContenidoAudioVisualMapped
 }
 

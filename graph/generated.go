@@ -84,7 +84,7 @@ type ComplexityRoot struct {
 	Query struct {
 		Contenido                  func(childComplexity int, id string) int
 		ContenidoAudioVisual       func(childComplexity int) int
-		ContenidoAudioVisualMapped func(childComplexity int) int
+		ContenidoAudioVisualMapped func(childComplexity int, page int32) int
 	}
 
 	TipoContenidoAudioVisual struct {
@@ -106,7 +106,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	ContenidoAudioVisual(ctx context.Context) ([]*model.ContenidoAudioVisual, error)
-	ContenidoAudioVisualMapped(ctx context.Context) ([]*model.ContenidoAudioVisualMapped, error)
+	ContenidoAudioVisualMapped(ctx context.Context, page int32) ([]*model.ContenidoAudioVisualMapped, error)
 	Contenido(ctx context.Context, id string) (*model.ContenidoAudioVisualMapped, error)
 }
 
@@ -347,7 +347,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			break
 		}
 
-		return e.complexity.Query.ContenidoAudioVisualMapped(childComplexity), true
+		args, err := ec.field_Query_ContenidoAudioVisualMapped_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ContenidoAudioVisualMapped(childComplexity, args["page"].(int32)), true
 
 	case "TipoContenidoAudioVisual.id":
 		if e.complexity.TipoContenidoAudioVisual.ID == nil {
@@ -768,6 +773,29 @@ func (ec *executionContext) field_Mutation_updateContenidoTipo_argsNewTipoID(
 	}
 
 	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_ContenidoAudioVisualMapped_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Query_ContenidoAudioVisualMapped_argsPage(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["page"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_ContenidoAudioVisualMapped_argsPage(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (int32, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+	if tmp, ok := rawArgs["page"]; ok {
+		return ec.unmarshalNInt2int32(ctx, tmp)
+	}
+
+	var zeroVal int32
 	return zeroVal, nil
 }
 
@@ -2145,7 +2173,7 @@ func (ec *executionContext) _Query_ContenidoAudioVisualMapped(ctx context.Contex
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().ContenidoAudioVisualMapped(rctx)
+		return ec.resolvers.Query().ContenidoAudioVisualMapped(rctx, fc.Args["page"].(int32))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2162,7 +2190,7 @@ func (ec *executionContext) _Query_ContenidoAudioVisualMapped(ctx context.Contex
 	return ec.marshalNContenidoAudioVisualMapped2ᚕᚖgithubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐContenidoAudioVisualMappedᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ContenidoAudioVisualMapped(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_ContenidoAudioVisualMapped(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -2185,6 +2213,17 @@ func (ec *executionContext) fieldContext_Query_ContenidoAudioVisualMapped(_ cont
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ContenidoAudioVisualMapped", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_ContenidoAudioVisualMapped_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -5578,6 +5617,22 @@ func (ec *executionContext) marshalNID2ᚕstringᚄ(ctx context.Context, sel ast
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNInt2int32(ctx context.Context, v any) (int32, error) {
+	res, err := graphql.UnmarshalInt32(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int32(ctx context.Context, sel ast.SelectionSet, v int32) graphql.Marshaler {
+	_ = sel
+	res := graphql.MarshalInt32(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNNuevoContenidoAudioVisual2githubᚗcomᚋNeichSᚋgraphqlᚑpixdexᚋgraphᚋmodelᚐNuevoContenidoAudioVisual(ctx context.Context, v any) (model.NuevoContenidoAudioVisual, error) {
